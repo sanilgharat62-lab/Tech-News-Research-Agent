@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech News Research Agent</title>
+    <style>
+:root {
+  --bg: #f5f7f4;
+  --surface: #ffffff;
+  --surface-muted: #eef3ef;
+  --ink: #17211b;
+  --muted: #617067;
+  --line: #dbe4dc;
+  --accent: #126c5a;
+  --accent-strong: #0c4c41;
+  --gold: #bd8b13;
+  --blue: #2666a3;
+  --danger: #b44545;
+  --shadow: 0 18px 45px rgba(29, 48, 39, 0.1);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  display: grid;
+  grid-template-columns: 286px minmax(0, 1fr);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.sidebar {
+  min-height: 100vh;
+  padding: 24px;
+  background: #18241d;
+  color: #f8fbf7;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 0;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.brand-mark {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #f0b63d;
+  color: #17211b;
+  font-weight: 800;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+h3 {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.eyebrow,
+.label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.sidebar .eyebrow,
+.sidebar .label {
+  color: #a9b7ad;
+}
+
+.nav {
+  display: grid;
+  gap: 8px;
+}
+
+.nav-item {
+  color: #d7e0d9;
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 12px 14px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+}
+
+.nav-item.active,
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.workflow-card {
+  margin-top: auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  position: relative;
+}
+
+.workflow-card strong {
+  display: block;
+  margin: 6px 0 10px;
+}
+
+.workflow-card p:last-child {
+  color: #c7d2ca;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.status-dot {
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--danger);
+}
+
+.status-dot.live {
+  background: #42d27a;
+  box-shadow: 0 0 0 5px rgba(66, 210, 122, 0.12);
+}
+
+main {
+  padding: 28px;
+  min-width: 0;
+}
+
+.page-section {
+  display: none;
+}
+
+.page-section.is-visible {
+  display: block;
+}
+
+.topbar,
+.section-heading,
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.primary-button,
+.secondary-button,
+.icon-button,
+.segment {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 42px;
+  padding: 0 16px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.primary-button {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.primary-button:hover {
+  background: var(--accent-strong);
+}
+
+.secondary-button:hover,
+.icon-button:hover,
+.segment:hover {
+  border-color: var(--accent);
+}
+
+.icon-button {
+  width: 42px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 26px 0;
+}
+
+.metric,
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.metric {
+  padding: 18px;
+}
+
+.metric span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.metric strong {
+  display: block;
+  font-size: 30px;
+  margin: 8px 0 6px;
+}
+
+#deliveryTarget {
+  font-size: 18px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.metric p,
+.help {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.success {
+  color: var(--accent);
+}
+
+.dashboard-grid,
+.report-layout,
+.source-layout,
+.integrations-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.dashboard-grid {
+  grid-template-columns: minmax(0, 1.7fr) minmax(320px, 0.9fr);
+}
+
+.panel {
+  padding: 20px;
+}
+
+.wide {
+  min-width: 0;
+}
+
+select,
+input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fbfcfb;
+  color: var(--ink);
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.article-list,
+.source-list,
+.settings-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.article-item,
+.source-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: #fbfcfb;
+}
+
+.article-meta,
+.source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pill.gold {
+  color: #694906;
+  background: #f7e8bf;
+}
+
+.article-item h4 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.article-item p,
+.source-item p,
+.timeline p,
+.integration-card p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  display: grid;
+  gap: 16px;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  column-gap: 10px;
+  align-items: start;
+}
+
+.timeline p {
+  grid-column: 2;
+  font-size: 14px;
+}
+
+.node-icon,
+.integration-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--surface-muted);
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
+.section-heading {
+  margin-bottom: 22px;
+}
+
+.source-layout {
+  grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.25fr);
+}
+
+.source-form {
+  align-self: start;
+  display: grid;
+  gap: 14px;
+}
+
+.report-layout {
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+}
+
+.report-body {
+  margin-top: 18px;
+  display: grid;
+  gap: 14px;
+  line-height: 1.65;
+}
+
+.report-body ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.notice {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 14px 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.notice.warning {
+  border-color: #ead398;
+  background: #fff7df;
+  color: #62470b;
+}
+
+.notice.success-notice {
+  border-color: rgba(18, 108, 90, 0.35);
+  background: #eaf7f1;
+  color: var(--accent-strong);
+}
+
+.settings-list label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+
+.settings-list input {
+  width: 18px;
+  min-height: 18px;
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 18px;
+  padding: 6px;
+  border-radius: 8px;
+  background: var(--surface-muted);
+}
+
+.segment {
+  border: 0;
+  background: transparent;
+}
+
+.segment.active {
+  background: #ffffff;
+  color: var(--accent-strong);
+  box-shadow: 0 2px 8px rgba(23, 33, 27, 0.08);
+}
+
+.integrations-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.integration-card {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.integration-card.connected {
+  border-color: rgba(18, 108, 90, 0.4);
+}
+
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  max-width: min(380px, calc(100vw - 48px));
+  padding: 13px 16px;
+  border-radius: 8px;
+  background: #17211b;
+  color: #ffffff;
+  box-shadow: var(--shadow);
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: 180ms ease;
+}
+
+.toast.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@media (max-width: 1040px) {
+  body {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    min-height: auto;
+    position: static;
+  }
+
+  .nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .workflow-card {
+    margin-top: 0;
+  }
+
+  .metrics-grid,
+  .integrations-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-grid,
+  .source-layout,
+  .report-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  main,
+  .sidebar {
+    padding: 18px;
+  }
+
+  .topbar,
+  .section-heading,
+  .panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions,
+  .actions .primary-button {
+    width: 100%;
+  }
+
+  .nav,
+  .metrics-grid,
+  .integrations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel,
+  .metric {
+    padding: 16px;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+}
+
+  </style>
+</head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">TN</div>
+        <div>
+          <p class="eyebrow">n8n research console</p>
+          <h1>Tech News Agent</h1>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#dashboard" class="nav-item active" data-section="dashboard">Dashboard</a>
+        <a href="#sources" class="nav-item" data-section="sources">Sources</a>
+        <a href="#reports" class="nav-item" data-section="reports">Reports</a>
+        <a href="#integrations" class="nav-item" data-section="integrations">Integrations</a>
+      </nav>
+
+      <div class="workflow-card">
+        <p class="label">Imported workflow</p>
+        <strong>My workflow</strong>
+        <span class="status-dot live"></span>
+        <p>Webhook -> AI Agent -> Gmail, RSS, OpenAI</p>
+      </div>
+    </aside>
+
+    <main>
+      <section id="dashboard" class="page-section is-visible">
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">Autonomous research pipeline</p>
+            <h2>Daily technology intelligence</h2>
+          </div>
+          <div class="actions">
+            <button class="icon-button" id="refreshButton" aria-label="Refresh feed" title="Refresh feed">
+              <span aria-hidden="true">R</span>
+            </button>
+            <button class="primary-button" id="runNowButton">Run digest</button>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <article class="metric">
+            <span>Articles tracked</span>
+            <strong id="articleCount">24</strong>
+            <p>Across active RSS and API sources</p>
+          </article>
+          <article class="metric">
+            <span>Categories</span>
+            <strong>6</strong>
+            <p>AI, startups, security, cloud, chips, devtools</p>
+          </article>
+          <article class="metric">
+            <span>Delivery</span>
+            <strong id="deliveryTarget">Gmail</strong>
+            <p>User-defined recipient</p>
+          </article>
+          <article class="metric">
+            <span>Workflow state</span>
+            <strong class="success">Active</strong>
+            <p>Production webhook is connected</p>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="panel wide">
+            <div class="panel-header">
+              <div>
+                <p class="label">Research queue</p>
+                <h3>Latest technology signals</h3>
+              </div>
+              <select id="categoryFilter" aria-label="Filter category">
+                <option value="all">All categories</option>
+                <option value="AI">AI</option>
+                <option value="Security">Security</option>
+                <option value="Startups">Startups</option>
+                <option value="Cloud">Cloud</option>
+              </select>
+            </div>
+            <div id="articleList" class="article-list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="label">Pipeline</p>
+                <h3>n8n workflow map</h3>
+              </div>
+            </div>
+            <ol class="timeline">
+              <li><span class="node-icon">1</span><strong>Webhook Trigger</strong><p>Receives Run digest requests from this frontend.</p></li>
+              <li><span class="node-icon">2</span><strong>RSS/API Collection</strong><p>Reads source feeds and normalizes article data.</p></li>
+              <li><span class="node-icon">3</span><strong>OpenAI Summary</strong><p>Generates concise summaries and takeaways.</p></li>
+              <li><span class="node-icon">4</span><strong>Delivery</strong><p>Sends report to Gmail now; Slack and Discord can use webhooks.</p></li>
+            </ol>
+          </section>
+        </div>
+      </section>
+
+      <section id="sources" class="page-section">
+        <div class="section-heading">
+          <p class="eyebrow">Collection layer</p>
+          <h2>Source management</h2>
+        </div>
+        <div class="source-layout">
+          <form class="panel source-form" id="sourceForm">
+            <label>
+              Source name
+              <input id="sourceName" type="text" placeholder="TechCrunch AI" required />
+            </label>
+            <label>
+              Feed or API URL
+              <input id="sourceUrl" type="url" placeholder="https://example.com/rss" required />
+            </label>
+            <label>
+              Category
+              <select id="sourceCategory">
+                <option>AI</option>
+                <option>Startups</option>
+                <option>Security</option>
+                <option>Cloud</option>
+                <option>DevTools</option>
+                <option>Semiconductors</option>
+              </select>
+            </label>
+            <button class="primary-button" type="submit">Add source</button>
+          </form>
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="label">Active feeds</p>
+                <h3>Technology source list</h3>
+              </div>
+            </div>
+            <div id="sourceList" class="source-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="reports" class="page-section">
+        <div class="section-heading">
+          <p class="eyebrow">Generated output</p>
+          <h2>Report preview</h2>
+        </div>
+        <div class="report-layout">
+          <section class="panel report-preview">
+            <div class="panel-header">
+              <div>
+                <p class="label">Daily brief</p>
+                <h3 id="reportTitle">AI infrastructure funding accelerates</h3>
+              </div>
+              <button class="secondary-button" id="copyReportButton">Copy</button>
+            </div>
+            <div id="reportBody" class="report-body"></div>
+          </section>
+          <section class="panel">
+            <p class="label">Report settings</p>
+            <div class="settings-list">
+              <label><input type="checkbox" checked /> Executive summary</label>
+              <label><input type="checkbox" checked /> Key takeaways</label>
+              <label><input type="checkbox" checked /> Why it matters</label>
+              <label><input type="checkbox" /> Include raw links appendix</label>
+            </div>
+            <div class="segmented" role="group" aria-label="Report cadence">
+              <button class="segment active">Daily</button>
+              <button class="segment">Weekly</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="integrations" class="page-section">
+        <div class="section-heading">
+          <p class="eyebrow">Delivery layer</p>
+          <h2>Integrations</h2>
+        </div>
+        <div class="integrations-grid">
+          <section class="panel">
+            <p class="label">n8n webhook</p>
+            <h3>Connect frontend actions</h3>
+            <div class="notice success-notice">
+              Webhook Trigger found. Use the n8n production URL ending in /webhook/YOUR-WEBHOOK-ID.
+            </div>
+            <label>
+              Production webhook URL
+              <input id="webhookUrl" type="url" placeholder="https://YOUR-N8N-DOMAIN.app.n8n.cloud/webhook/YOUR-WEBHOOK-ID" />
+            </label>
+            <label>
+              Digest recipient email
+              <input id="recipientEmail" type="email" placeholder="name@example.com" />
+            </label>
+            <button class="primary-button" id="saveWebhookButton">Save settings</button>
+            <p class="help">Connected to your n8n production webhook. The selected recipient is sent with each Run digest request.</p>
+          </section>
+          <section class="panel integration-card connected">
+            <span class="integration-icon">G</span>
+            <h3>Gmail</h3>
+            <p>Connected in the imported n8n workflow for email delivery.</p>
+          </section>
+          <section class="panel integration-card">
+            <span class="integration-icon">#</span>
+            <h3>Slack</h3>
+            <p>Add a Slack incoming webhook node for team digests.</p>
+          </section>
+          <section class="panel integration-card">
+            <span class="integration-icon">D</span>
+            <h3>Discord</h3>
+            <p>Add a Discord webhook node for community briefings.</p>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script>
+const articles = [
+  {
+    title: "AI infrastructure funding accelerates as model demand rises",
+    source: "TechCrunch",
+    category: "AI",
+    freshness: "18 min ago",
+    summary:
+      "Investors are backing GPU clouds, inference tooling, and data-center orchestration startups as enterprises move from pilots to production AI workloads.",
+    impact:
+      "Useful for tracking vendor demand, infrastructure cost pressure, and startup opportunities around model serving."
+  },
+  {
+    title: "New supply-chain attack targets open-source package maintainers",
+    source: "The Hacker News",
+    category: "Security",
+    freshness: "42 min ago",
+    summary:
+      "Researchers found a coordinated phishing campaign aimed at package maintainers with access to widely used developer libraries.",
+    impact:
+      "Security teams should review dependency trust policies and add maintainer-account monitoring to release processes."
+  },
+  {
+    title: "Cloud providers race to simplify multi-region AI deployment",
+    source: "InfoWorld",
+    category: "Cloud",
+    freshness: "1 hr ago",
+    summary:
+      "New orchestration features focus on latency, availability, and cost controls for AI applications running across regions.",
+    impact:
+      "Engineering teams can use these updates to evaluate failover strategies and reduce operational complexity."
+  },
+  {
+    title: "Developer tooling startups shift toward agent observability",
+    source: "VentureBeat",
+    category: "Startups",
+    freshness: "2 hr ago",
+    summary:
+      "A wave of early-stage companies is building logs, traces, evaluation suites, and guardrails for autonomous coding and support agents.",
+    impact:
+      "This is a strong signal that agent reliability is becoming a buying criterion for enterprise AI adoption."
+  }
+];
+
+let sources = [
+  {
+    name: "TechCrunch AI",
+    url: "https://techcrunch.com/category/artificial-intelligence/feed/",
+    category: "AI"
+  },
+  {
+    name: "The Hacker News",
+    url: "https://feeds.feedburner.com/TheHackersNews",
+    category: "Security"
+  },
+  {
+    name: "InfoWorld Cloud",
+    url: "https://www.infoworld.com/index.rss",
+    category: "Cloud"
+  },
+  {
+    name: "Imported workflow technology feed",
+    url: "https://www.hindustantimes.com/feeds/rss/technology/rssfeed.xml",
+    category: "Technology"
+  }
+];
+
+const articleList = document.querySelector("#articleList");
+const sourceList = document.querySelector("#sourceList");
+const categoryFilter = document.querySelector("#categoryFilter");
+const articleCount = document.querySelector("#articleCount");
+const toast = document.querySelector("#toast");
+const webhookInput = document.querySelector("#webhookUrl");
+const recipientInput = document.querySelector("#recipientEmail");
+const deliveryTarget = document.querySelector("#deliveryTarget");
+const webhookPath = "YOUR-WEBHOOK-ID";
+const defaultWebhookUrl = "https://YOUR-N8N-DOMAIN.app.n8n.cloud/webhook/YOUR-WEBHOOK-ID";
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("visible");
+  window.clearTimeout(showToast.timeout);
+  showToast.timeout = window.setTimeout(() => toast.classList.remove("visible"), 3200);
+}
+
+function renderArticles() {
+  const selected = categoryFilter.value;
+  const visible = selected === "all" ? articles : articles.filter((article) => article.category === selected);
+  articleCount.textContent = String(visible.length * sources.length);
+
+  articleList.innerHTML = visible
+    .map(
+      (article) => `
+        <article class="article-item">
+          <div class="article-meta">
+            <span class="pill">${article.category}</span>
+            <span class="pill gold">${article.freshness}</span>
+            <span class="pill">${article.source}</span>
+          </div>
+          <h4>${article.title}</h4>
+          <p>${article.summary}</p>
+          <p><strong>Why it matters:</strong> ${article.impact}</p>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function renderSources() {
+  sourceList.innerHTML = sources
+    .map(
+      (source, index) => `
+        <article class="source-item">
+          <div class="source-meta">
+            <span class="pill">${source.category}</span>
+            <button class="secondary-button" type="button" data-remove-source="${index}">Remove</button>
+          </div>
+          <h3>${source.name}</h3>
+          <p>${source.url}</p>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function renderReport() {
+  const topArticle = articles[0];
+  document.querySelector("#reportTitle").textContent = `${topArticle.title} - Daily Tech Brief`;
+  document.querySelector("#reportBody").innerHTML = `
+    <p>Hello,</p>
+    <p>Here is the latest technology update from your research agent.</p>
+    <p><strong>Headline:</strong> ${topArticle.title}</p>
+    <p><strong>Source:</strong> ${topArticle.source}</p>
+    <p><strong>Executive summary:</strong> ${topArticle.summary}</p>
+    <p><strong>Key takeaways:</strong></p>
+    <ul>
+      <li>Infrastructure demand is moving from experimentation to production.</li>
+      <li>Cost, reliability, and orchestration are becoming board-level AI concerns.</li>
+      <li>Startups with practical deployment tooling are gaining investor attention.</li>
+    </ul>
+    <p><strong>Why it matters:</strong> ${topArticle.impact}</p>
+  `;
+}
+
+async function runDigest() {
+  const webhookUrl = localStorage.getItem("newsAgentWebhook") || defaultWebhookUrl;
+  const recipientEmail = localStorage.getItem("newsAgentRecipient") || recipientInput.value.trim();
+  const payload = {
+    action: "run_digest",
+    requestedAt: new Date().toISOString(),
+    channels: ["gmail"],
+    recipientEmail,
+    sources,
+    workflow: {
+      name: "My workflow",
+      active: true,
+      webhookPath,
+      nodes: ["Webhook", "AI Agent", "OpenAI Chat Model", "RSS Read", "Send a message in Gmail"]
+    }
+  };
+  const payloadText = JSON.stringify(payload);
+  const fallbackBody = new URLSearchParams({
+    action: payload.action,
+    requestedAt: payload.requestedAt,
+    source: "frontend",
+    recipientEmail,
+    payload: payloadText
+  });
+
+  if (!webhookUrl) {
+    showToast(`Webhook trigger found. Paste the full n8n URL ending in /webhook/${webhookPath}.`);
+    return;
+  }
+
+  if (!recipientEmail) {
+    showToast("Enter a recipient email in Integrations before running the digest.");
+    return;
+  }
+
+  if (!webhookUrl.startsWith("http")) {
+    showToast("Please paste the full n8n webhook URL, including https:// and your n8n domain.");
+    return;
+  }
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payloadText
+    });
+
+    if (!response.ok) {
+      throw new Error(`Webhook returned ${response.status}`);
+    }
+
+    showToast("Digest request sent to n8n.");
+  } catch (error) {
+    if (error instanceof TypeError) {
+      try {
+        await fetch(webhookUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body: fallbackBody
+        });
+        showToast("Digest request sent to n8n. Check Executions or Gmail for the result.");
+        return;
+      } catch (fallbackError) {
+        showToast(`Webhook send failed: ${fallbackError.message}`);
+        return;
+      }
+    }
+
+    showToast(`Could not reach webhook: ${error.message}`);
+  }
+}
+
+document.querySelectorAll(".nav-item").forEach((item) => {
+  item.addEventListener("click", (event) => {
+    event.preventDefault();
+    document.querySelectorAll(".nav-item").forEach((link) => link.classList.remove("active"));
+    document.querySelectorAll(".page-section").forEach((section) => section.classList.remove("is-visible"));
+    item.classList.add("active");
+    document.querySelector(`#${item.dataset.section}`).classList.add("is-visible");
+  });
+});
+
+document.querySelector("#sourceForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  sources = [
+    {
+      name: document.querySelector("#sourceName").value.trim(),
+      url: document.querySelector("#sourceUrl").value.trim(),
+      category: document.querySelector("#sourceCategory").value
+    },
+    ...sources
+  ];
+  form.reset();
+  renderSources();
+  renderArticles();
+  showToast("Source added to the research queue.");
+});
+
+sourceList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-remove-source]");
+  if (!button) return;
+  sources = sources.filter((_, index) => index !== Number(button.dataset.removeSource));
+  renderSources();
+  renderArticles();
+  showToast("Source removed.");
+});
+
+categoryFilter.addEventListener("change", renderArticles);
+
+document.querySelector("#refreshButton").addEventListener("click", () => {
+  renderArticles();
+  showToast("Feed view refreshed.");
+});
+
+document.querySelector("#runNowButton").addEventListener("click", runDigest);
+
+document.querySelector("#copyReportButton").addEventListener("click", async () => {
+  const report = document.querySelector("#reportBody").innerText;
+  try {
+    await navigator.clipboard.writeText(report);
+    showToast("Report copied.");
+  } catch {
+    showToast("Copy is unavailable in this browser context.");
+  }
+});
+
+document.querySelector("#saveWebhookButton").addEventListener("click", () => {
+  const value = webhookInput.value.trim();
+  const recipient = recipientInput.value.trim();
+  if (!value) {
+    localStorage.removeItem("newsAgentWebhook");
+  } else {
+    localStorage.setItem("newsAgentWebhook", value);
+  }
+
+  if (!recipient) {
+    localStorage.removeItem("newsAgentRecipient");
+  } else {
+    localStorage.setItem("newsAgentRecipient", recipient);
+  }
+
+  updateDeliveryTarget();
+  showToast("Integration settings saved locally.");
+});
+
+document.querySelectorAll(".segment").forEach((button) => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".segment").forEach((segment) => segment.classList.remove("active"));
+    button.classList.add("active");
+    showToast(`${button.textContent} cadence selected.`);
+  });
+});
+
+function updateDeliveryTarget() {
+  const recipient = localStorage.getItem("newsAgentRecipient") || recipientInput.value.trim();
+  deliveryTarget.textContent = recipient || "Not set";
+}
+
+webhookInput.value = localStorage.getItem("newsAgentWebhook") || defaultWebhookUrl;
+recipientInput.value = localStorage.getItem("newsAgentRecipient") || "";
+updateDeliveryTarget();
+renderArticles();
+renderSources();
+renderReport();
+
+  </script>
+</body>
+</html>
