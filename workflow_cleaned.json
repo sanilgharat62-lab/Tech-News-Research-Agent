@@ -1,0 +1,150 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ `Run the technology news digest now.\nUse the configured RSS Read tool.\nFetch the latest article from the RSS feed.\nSummarize only the newest article.\nGenerate the daily news brief using the system message format.\nSend the final email to ${$json.body?.recipientEmail || $json.recipientEmail || \"recipient@example.com\"} using the Gmail tool.` }}",
+        "options": {
+          "systemMessage": "You are an AI News Digest Agent.\n\nYour task is to monitor the provided RSS feed and generate a concise, professional HTML email containing ONLY the latest news item from the feed.\n\nInstructions:\n\n1. Fetch the RSS feed using the RSS Read tool.\n2. Identify the most recently published article.\n3. Ignore all older articles.\n4. Read and analyze the latest article.\n5. Generate the email in valid HTML format using the exact template below.\n6. Send the final email to the recipient using the Gmail tool.\n   Recipient: ${$json.body?.recipientEmail || $json.recipientEmail || \"recipient@example.com\"}\n7. If no recipient is found, send to recipient@example.com as default.\n\nEmail Subject:\n\ud83d\udcf0 [Article Title] - Daily News Brief\n\nEmail Body \u2014 output this exact HTML, filling in the placeholders:\n\n<!DOCTYPE html>\n<html>\n<head>\n<style>\n  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');\n  body {\n    margin: 0;\n    padding: 0;\n    background-color: #f4f6f8;\n    font-family: 'Inter', Arial, sans-serif;\n    color: #1a1a2e;\n  }\n  .wrapper {\n    max-width: 620px;\n    margin: 32px auto;\n    background: #ffffff;\n    border-radius: 16px;\n    overflow: hidden;\n    box-shadow: 0 4px 24px rgba(0,0,0,0.08);\n  }\n  .header {\n    background: linear-gradient(135deg, #0f3460 0%, #126c5a 100%);\n    padding: 36px 32px 28px;\n    text-align: center;\n  }\n  .header h1 {\n    margin: 0;\n    font-size: 22px;\n    font-weight: 700;\n    color: #ffffff;\n    letter-spacing: 0.3px;\n  }\n  .header p {\n    margin: 8px 0 0;\n    font-size: 13px;\n    color: rgba(255,255,255,0.75);\n  }\n  .badge {\n    display: inline-block;\n    background: rgba(255,255,255,0.15);\n    color: #fff;\n    font-size: 12px;\n    font-weight: 600;\n    padding: 4px 12px;\n    border-radius: 999px;\n    margin-bottom: 14px;\n    letter-spacing: 0.5px;\n    text-transform: uppercase;\n  }\n  .body {\n    padding: 32px;\n  }\n  .greeting {\n    font-size: 15px;\n    color: #444;\n    margin-bottom: 24px;\n    line-height: 1.6;\n  }\n  .divider {\n    border: none;\n    border-top: 1px solid #eef0f3;\n    margin: 24px 0;\n  }\n  .section-label {\n    font-size: 11px;\n    font-weight: 700;\n    text-transform: uppercase;\n    letter-spacing: 1px;\n    color: #126c5a;\n    margin-bottom: 6px;\n  }\n  .headline {\n    font-size: 20px;\n    font-weight: 700;\n    color: #0f3460;\n    line-height: 1.35;\n    margin: 0 0 20px;\n  }\n  .meta-row {\n    display: flex;\n    gap: 10px;\n    flex-wrap: wrap;\n    margin-bottom: 20px;\n  }\n  .meta-pill {\n    background: #f0f4f8;\n    border-radius: 999px;\n    padding: 5px 13px;\n    font-size: 12px;\n    font-weight: 600;\n    color: #3a3a5c;\n  }\n  .summary-box {\n    background: #f8faf9;\n    border-left: 4px solid #126c5a;\n    border-radius: 0 10px 10px 0;\n    padding: 16px 20px;\n    margin-bottom: 24px;\n    font-size: 14px;\n    line-height: 1.7;\n    color: #333;\n  }\n  .section-title {\n    font-size: 14px;\n    font-weight: 700;\n    color: #0f3460;\n    margin: 0 0 12px;\n  }\n  ul.takeaways {\n    margin: 0 0 24px;\n    padding: 0;\n    list-style: none;\n  }\n  ul.takeaways li {\n    display: flex;\n    align-items: flex-start;\n    gap: 10px;\n    font-size: 14px;\n    color: #333;\n    line-height: 1.6;\n    padding: 8px 0;\n    border-bottom: 1px solid #f0f0f0;\n  }\n  ul.takeaways li:last-child {\n    border-bottom: none;\n  }\n  ul.takeaways li::before {\n    content: \"\u25b8\";\n    color: #126c5a;\n    font-size: 14px;\n    flex-shrink: 0;\n    margin-top: 2px;\n  }\n  .why-box {\n    background: linear-gradient(135deg, #eaf7f1 0%, #e8f4ff 100%);\n    border-radius: 12px;\n    padding: 18px 20px;\n    font-size: 14px;\n    line-height: 1.7;\n    color: #1a3a2e;\n    margin-bottom: 24px;\n  }\n  .cta-button {\n    display: block;\n    text-align: center;\n    background: linear-gradient(135deg, #0f3460 0%, #126c5a 100%);\n    color: #ffffff !important;\n    text-decoration: none;\n    font-weight: 700;\n    font-size: 14px;\n    padding: 14px 28px;\n    border-radius: 10px;\n    margin: 24px 0;\n    letter-spacing: 0.3px;\n  }\n  .footer {\n    background: #f4f6f8;\n    padding: 20px 32px;\n    text-align: center;\n    font-size: 12px;\n    color: #999;\n    line-height: 1.6;\n  }\n  .footer a {\n    color: #126c5a;\n    text-decoration: none;\n  }\n</style>\n</head>\n<body>\n<div class=\"wrapper\">\n\n  <!-- HEADER -->\n  <div class=\"header\">\n    <div class=\"badge\">\ud83d\udce1 Daily Tech Brief</div>\n    <h1>\ud83d\udcf0 [Article Title]</h1>\n    <p>Your autonomous technology research digest</p>\n  </div>\n\n  <!-- BODY -->\n  <div class=\"body\">\n    <p class=\"greeting\">Hello,<br>Here is your latest technology update from the RSS research agent.</p>\n\n    <hr class=\"divider\">\n\n    <!-- META -->\n    <div class=\"section-label\">\ud83d\udccc Source Details</div>\n    <div class=\"meta-row\">\n      <span class=\"meta-pill\">\ud83d\udd17 [Publication Name]</span>\n      <span class=\"meta-pill\">\ud83d\udcc5 [Publication Date]</span>\n    </div>\n\n    <!-- HEADLINE -->\n    <div class=\"section-label\">\ud83d\udcf0 Headline</div>\n    <p class=\"headline\">[Article Title]</p>\n\n    <!-- SUMMARY -->\n    <div class=\"section-label\">\ud83d\udcdd Executive Summary</div>\n    <div class=\"summary-box\">\n      [3-5 sentence summary in plain language]\n    </div>\n\n    <!-- TAKEAWAYS -->\n    <div class=\"section-title\">\ud83c\udfaf Key Takeaways</div>\n    <ul class=\"takeaways\">\n      <li>[Takeaway 1]</li>\n      <li>[Takeaway 2]</li>\n      <li>[Takeaway 3]</li>\n      <li>[Takeaway 4]</li>\n    </ul>\n\n    <!-- WHY IT MATTERS -->\n    <div class=\"section-label\">\ud83d\udca1 Why It Matters</div>\n    <div class=\"why-box\">\n      [2-3 sentences on business, technology, startup, AI, or industry impact]\n    </div>\n\n    <!-- CTA -->\n    <a href=\"[Article URL]\" class=\"cta-button\">\ud83d\udd17 Read Full Article \u2192</a>\n\n    <hr class=\"divider\">\n  </div>\n\n  <!-- FOOTER -->\n  <div class=\"footer\">\n    Delivered by your <strong>Tech News Research Agent</strong> \u00b7 Powered by n8n + OpenAI<br>\n    <a href=\"[Article URL]\">View source article</a>\n  </div>\n\n</div>\n</body>\n</html>\n\nRequirements:\n\n* Output ONLY the completed HTML above \u2014 no markdown fences, no preamble, no commentary.\n* Fill every placeholder: [Article Title], [Publication Name], [Publication Date], [Article URL].\n* Keep total word count under 300 words across all sections.\n* Use clear professional language.\n* Do not reproduce large portions of the article verbatim.\n* Focus on insights over repetition.\n* Highlight practical implications for AI, SaaS, engineering, or startup topics.\n* Remove all marketing fluff and clickbait.\n* The greeting always reads \"Hello,\" unless a different name is available in the payload.\n* Send the completed HTML email using the Gmail tool to the recipient from the webhook payload.\n* Default recipient if none provided: recipient@example.com\n\nIf no new article is found since the last run, output exactly:\n\"No new articles published since the last digest.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6b257efb-be2a-4468-885f-f317eeeb4386",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        208
+      ],
+      "id": "5fbd4546-2770-45f8-b32a-0c13d4320355",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        272,
+        288
+      ],
+      "id": "de54252b-d307-4846-a5f3-17c69a1a4a53",
+      "name": "Send a message in Gmail",
+      "webhookId": "2c21afd3-f1a7-4666-9f41-5a698bb27c1d"
+    },
+    {
+      "parameters": {
+        "url": "https://www.hindustantimes.com/feeds/rss/technology/rssfeed.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedReadTool",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        304
+      ],
+      "id": "f2bab723-f913-4bbf-b5f4-76449d3d86ff",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "86c1c93c-165a-4b0b-8acf-4df5fc264e11",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "2798b2df-bacf-4319-9184-a0534ef328bb",
+      "name": "Webhook",
+      "webhookId": "86c1c93c-165a-4b0b-8acf-4df5fc264e11"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "125e8f68-f058-4ee2-b180-695a9e2f2415",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": ""
+  },
+  "nodeGroups": [],
+  "id": "IPH2Bl8ydV5yftHw",
+  "tags": []
+}
